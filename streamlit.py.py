@@ -99,10 +99,22 @@ def apply_bpe(corpus, merges):
 
 
 # ---------------- Load vocabs ----------------
-with open("E:\\ANLP\\Assignment 1\\model4\\src_vocab.json", "r", encoding="utf-8") as f:
+import os
+import json
+
+
+base_path = os.path.dirname(__file__)
+
+
+src_vocab_path = os.path.join(base_path, "dataset preprocessed file", "src_vocab.json")
+tgt_vocab_path = os.path.join(base_path, "dataset preprocessed file", "tgt_vocab.json")
+
+with open(src_vocab_path, "r", encoding="utf-8") as f:
     src_token2id = json.load(f)
-with open("E:\\ANLP\\Assignment 1\\model4\\tgt_vocab.json","r", encoding="utf-8") as f:
+
+with open(tgt_vocab_path, "r", encoding="utf-8") as f:
     tgt_token2id = json.load(f)
+
 
 src_id2token = {i: tok for tok, i in src_token2id.items()}
 tgt_id2token = {i: tok for tok, i in tgt_token2id.items()}
@@ -234,7 +246,14 @@ decoder = Decoder(output_dim=len(tgt_token2id), emb_dim=256, hid_dim=512,
                   n_layers=4, dropout=0.3)
 model = Seq2Seq(encoder, decoder, device).to(device)
 
-model.load_state_dict(torch.load("E:\\ANLP\\Assignment 1\\model_epoch30.pt", map_location=device))
+# Get base directory (where streamlit_app.py is located)
+base_path = os.path.dirname(__file__)
+
+# Build path to model file inside "models" folder
+model_path = os.path.join(base_path, "models/Trained on emb_dim=256 adn hid_dim=512", "model_epoch30.pt")
+
+# Load model state
+model.load_state_dict(torch.load(model_path, map_location=device))
 
 # ---------------- Translation function ----------------
 def translate_sentence(model, src_ids, max_len=40):
