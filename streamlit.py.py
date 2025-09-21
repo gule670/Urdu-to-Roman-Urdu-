@@ -284,8 +284,13 @@ def detokenize(tokens):
 # ---------------- Streamlit UI ----------------
 st.title("Urdu → Roman Urdu Translator")
 # --- Apply same BPE as training ---
-with open("E:\\ANLP\\Assignment 1\\bpe_mergesur.txt", "r", encoding="utf-8") as f:
-     src_merges = [tuple(line.strip().split()) for line in f if line.strip()]
+
+base_path = os.path.dirname(__file__)
+merges_path = os.path.join(base_path, "dataset preprocessed file", "bpe_mergesur.txt")
+
+# Load merges
+with open(merges_path, "r", encoding="utf-8") as f:
+    src_merges = [tuple(line.strip().split()) for line in f if line.strip()]
 user_input = st.text_area("Enter Urdu sentence:")
 if st.button("Translate"):
     if not user_input.strip():
